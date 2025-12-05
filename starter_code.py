@@ -8,7 +8,28 @@
 import os 
 import sqlite3
 import pandas as pd
+
 # sqlite for connecting to sqlite databases
+# database steup 
+def init_db(conn):
+    cursor = conn.cursor()
+    cursor.excute(
+        """
+        CREATE TABLE IF NOT EXISTS tunes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            book_number INTEGER,
+            file_name TEXT, 
+            tune_index INTEGER,
+            ref_number TEXT, 
+            title TEXT, 
+            tune_type TEXT, 
+            meter TEXT, 
+            key_sig TEXT, 
+            raw_abc TEXT
+        )
+        """
+    )
+    conn.commit()
 
 # An example of how to create a table, insert data
 # and run a select query
@@ -55,8 +76,6 @@ def process_file(file):
         # print(line)
         pass
 
-
-# my_sql_database()
 # do_databasse_stuff()
 
 # Iterate over directories in abc_books
