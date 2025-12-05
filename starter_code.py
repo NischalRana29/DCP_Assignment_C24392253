@@ -31,6 +31,36 @@ def init_db(conn):
     )
     conn.commit()
 
+def insert_tunes(conn, tunes):
+    cursor = conn.cursor()
+    cursor.executemany(
+        """
+        INSERT INTO tunes(
+            book_number,
+            file_name,
+            tune_index,
+            ref_number,
+            title,
+            tune_type,
+            meter,
+            key_sig,
+            raw_abc
+        )
+        VALUES (
+            :book_number,
+            :file_name,
+            :tune_index,
+            :ref_number,
+            :title,
+            :tune_type,
+            :meter,
+            :key_sig,
+            :raw_abc
+        )
+        """,
+        tunes
+    )
+    conn.commit()
 # An example of how to create a table, insert data
 # and run a select query
 def do_databasse_stuff():
