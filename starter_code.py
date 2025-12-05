@@ -186,5 +186,74 @@ def main():
     print(df.head())
     conn.close()
 
+#interactive menu
+#load the tunes table into a pandas DataFrame.
+def load_dataframe():
+    conn = sqlite3.connect("tunes.db")
+    df = pd.read_sql("SELECT * FROM tunes", conn)
+    conn.close()
+    return df
+
+def show_menu():
+    """Display the menu"""
+    print("*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_")
+    print("\n--- ABC Tune Database ---")
+    print("1) List all books")
+    print("2) Get tunes by book")
+    print("3) Get tunes by type")
+    print("4) Search tunes by title")
+    print("5) Show a tune's ABC text")
+    print("0) Quit")
+    print("*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_")
+
+
+def run_menu():
+    """Run the interactive menu loop."""
+    df = load_dataframe()  # Load data once at menu start
+
+    while True:
+        show_menu()
+        choice = input("Enter your choice: ").strip()
+
+        if choice == "1":
+            print("\nAvailable books:")
+            books = df["book_number"].unique()
+            books = [int(b) for b in books]  # convert np.int64 → int
+            print(sorted(books))
+
+        elif choice == "2":
+            book_num = int(input("Enter book number: "))
+            result = get_tunes_by_book(df, book_num)
+            print(result[["id", "title", "tune_type", "meter", "key_sig"]].head(20))
+
+        elif choice == "3":
+            tune_type = input("Enter tune type (e.g., air, reel, jig): ")
+            result = get_tunes_by_type(df, tune_type)
+            print(result[["id", "title", "meter", "key_sig"]].head(20))
+
+        elif choice == "4":
+            term = input("Enter title search term: ")
+            result = search_tunes(df, term)
+            print(result[["id", "title", "tune_type", "meter"]].head(20))
+
+        elif choice == "5":
+            tune_id = int(input("Enter tune ID: "))
+            abc = df[df["id"] == tune_id]["raw_abc"]
+            if abc.empty:
+                print("Tune not found.")
+            else:
+                print("\n--- RAW ABC TEXT ---")
+                print(abc.values[0])
+                print("---------------------")
+
+        elif choice == "0":
+            print("Goodbye!")
+            break
+
+        else:
+            print("Invalid choice. Try again.")
+
+
 if __name__ == "__main__":
     main()
+    run_menu()
