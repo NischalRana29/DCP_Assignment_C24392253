@@ -13,7 +13,8 @@ import os
 import sqlite3
 import pandas as pd
 import tkinter as tk
-from tkinter import ttk, scrolledtext, messagebox
+from tkinter import ttk, messagebox
+from tkinter import scrolledtext
 
 # Path to the folder containing book directories
 books_dir = "abc_books"
@@ -255,77 +256,145 @@ def run_menu():
         else:
             print("Invalid choice. Try again.")
 
-"""
 def launch_gui():
     df = load_dataframe()
 
     root = tk.Tk()
-    root.title("ABC Tune Database")
-    root.geometry("800x600")
+    root.title("ABC Music Explorer")
+    root.geometry("900x650")
+    
+    # ------------------ Title Bar ------------------
+    title_frame = tk.Frame(root, padx=10, pady=10)
+    title_frame.pack(fill="x")
 
-    # Frame for filters
-    frame = tk.Frame(root)
-    frame.pack(pady=10)
+    tk.Label(
+        title_frame, 
+        text="ABC Music Explorer",
+        font=("Times New Roman", 20, "bold")
+    ).pack(side="left")
 
-    ##
-    tk.Label(frame, text="Select Book:").grid(row=0, column=0, padx=5)
-    book_num = sorted([int(b) for b in df["book_number"].unique()])  # error
-    selected_book = tk.StringVar()
-    book_menu = ttk.Combobox(frame, textvariable=selected_book, values=books, width=10)  # 'books' not defined
-    book_menu.grid(row=0, column=1, padx=5)
+    tk.Button(title_frame, text="Exit", command=root.destroy).pack(side="right")
 
-    ##
-    tk.Label(frame, text="Search Title:".grid(row=0, column=2, padx=5))  # syntax error
+    # ------------------ Search & Filters ------------------
+    filter_frame = tk.Frame(root, pady=5)
+    filter_frame.pack(fill="x")  
 
+    # Search title
+    tk.Label(filter_frame, text="Search Title:").grid(row=0, column=0)
     search_var = tk.StringVar()
-    search_entry = tk.Entry(frame, textvariable=search_var, width=20)
-    search_entry.grid(row=0, column=3, padx=5)
+    search_entry = tk.Entry(filter_frame, textvariable=search_var, width=30)
+    search_entry.grid(row=0, column=1, padx=5)
 
-    # Tune List
-    tune_list = tk.Listbox(root, width=80, height=15)
-    tune_list.pack(pady=10)
+    # Filter by Book
+    tk.Label(filter_frame, text="Filter by Book:").grid(row=1, column=0)
+    books = sorted(df["book_number"].unique())
+    book_var = tk.StringVar()
+    book_combo = ttk.Combobox(filter_frame, textvariable=book_var, values=books, width=10, state="readonly")
+    book_combo.grid(row=1, column=1, padx=5)
 
-    # ABC text display
-    abc_box = scrolledtext.ScrolledText(root, width=80, height=15)
-    abc_box.pack()
+    # Filter by type
+    tk.Label(filter_frame, text="Filter by Type:").grid(row=2, column=0)
+    types = sorted(df["tune_type"].dropna().unique())
+    type_var = tk.StringVar()
+    type_combo = ttk.Combobox(filter_frame, textvariable=type_var, values=types, width=15, state="readonly")
+    type_combo.grid(row=2, column=1, padx=5)
 
-    def refresh_list():
-        tune_list.delete(0, tk.END)
-        abc_box.delete("1.0", tk.END)
+    # Buttons
+    def clear_filters():
+        search_var.set("")
+        book_var.set("")
+        type_var.set("")
+        refresh()
 
-        temp_df = df.copy()
+    tk.Button(filter_frame, text="Clear", width=10, command=clear_filters).grid(row=0, column=3, padx=20)
 
-        ##
-        if selected_book.get():
-            temp_df = temp_df[temp_df["book_nummber"] == int(selected_book.get())]  # key error
+    tk.Button(filter_frame, text="Search", width=10, command=lambda: refresh()).grid(row=1, column=3)
 
-        # title search
-        if search_var.get():
-            term = search_var.get()
-            temp_df = temp_df[temp_df["title"].str.contain(term, case=False, na=False)]  # ERROR 4: .contain instead of .contains
+    # ------------------ Table ------------------
+    table_frame = tk.Frame(root)
+    table_frame.pack(fill="both", expand=True, padx=10, pady=10)
 
-        for _, row in temp_df.iterrows():
-            tune_list.insert(tk.END, f"{row['id']} - {row['title']} ({row['tune_type']})")
+    columns = ("id", "book", "title", "type", "meter", "key")
+    tree = ttk.Treeview(table_frame, columns=columns, show="headings")
 
-    def show_abc(event):
-        if not tune_list.curselection():
-            return  
+    for col in columns:
+        tree.heading(col, text=col.capitalize())
+        tree.column(col, width=120)
 
-        selection = tune_list.get(tune_list.curselection())
-        tune_id = int(selection.split(" - ")[0])
+    tree.column("id", width=50, anchor="center")
+    tree.column("book", width=60, anchor="center")
+    tree.column("title", width=350, anchor="w")
 
+    tree.pack(side="left", fill="both", expand=True)
+
+    scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
+    tree.configure(yscroll=scrollbar.set)
+    scrollbar.pack(side="right", fill="y")
+
+    # ------------------ Bottom Area ------------------
+    bottom_frame = tk.Frame(root, pady=5)
+    bottom_frame.pack(fill="x")
+
+    count_label = tk.Label(bottom_frame, text="Number of tunes: 0")
+    count_label.pack(side="left")
+
+    # Show ABC text
+    def show_abc():
+        selected = tree.selection()
+        if not selected:
+            messagebox.showinfo("Info", "Select a tune first.")
+            return
+        
+        tune_id = tree.item(selected[0])["values"][0]
         abc_text = df[df["id"] == tune_id]["raw_abc"].values[0]
-        abc_box.delete("1.0", tk.END)
-        abc_box.insert(tk.END, abc_text)
 
-    tk.Button(frame, text="Apply Filters", command=refresh_list).grid(row=0, column=4, padx=10)
+        win = tk.Toplevel(root)
+        win.title("ABC Notation")
+        win.geometry("600x500")
 
-    tune_list.bind("<<ListboxSelect>>", show_abc)
+        text_box = scrolledtext.ScrolledText(win)
+        text_box.pack(fill="both", expand=True)
+        text_box.insert("1.0", abc_text)
+        text_box.config(state="disabled")
+
+    tk.Button(bottom_frame, text="Show ABC", command=show_abc).pack(side="right")
+
+    # ------------------ Filtering Logic ------------------
+    def refresh():
+        tree.delete(*tree.get_children())
+
+        temp = df.copy()
+
+        # Title search
+        if search_var.get():
+            temp = temp[temp["title"].str.contains(search_var.get(), case=False, na=False)]
+
+        # Book filter
+        if book_var.get():
+            temp = temp[temp["book_number"] == int(book_var.get())]
+
+        # Type filter
+        if type_var.get():
+            temp = temp[temp["tune_type"].str.lower() ==
+                        type_var.get().lower()]
+
+        # Insert rows
+        for _, row in temp.iterrows():
+            tree.insert("",
+                        "end",
+                        values=(
+                            row["id"], row["book_number"], row["title"],
+                            row["tune_type"], row["meter"], row["key_sig"]
+                        ))
+
+        count_label.config(text=f"Number of tunes: {len(temp)}")
+
+    refresh()
+    search_entry.bind("<Return>", lambda e: refresh())
 
     root.mainloop()
-"""
 
 if __name__ == "__main__":
     main()
-    run_menu() #text based menu
-    #launch_gui()
+    #run_menu() #text based menu
+    launch_gui()

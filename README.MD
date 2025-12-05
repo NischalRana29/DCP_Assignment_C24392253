@@ -6,6 +6,37 @@ Name: Nischal Rana
 
 Student Number: C24392253
 
+#Folder structure
+DCP_ASSIGNMENT_C24392253/
+│
+├── abc_books/
+│   ├── 1/
+│   │    ├── *.abc
+│   ├── 2/
+│        ├── *.abc
+│
+├── images/
+│   ├── screenshot1.png
+│   ├── SSChoice1.png
+│   ├── SSChoice2.png
+│   ├── SSChoice3.png
+│   ├── SSChoice4.png
+│   ├── SSChoice5.png
+│   ├── SSforchoice0.png
+│   ├── SSParsingBook1.png
+│   └── SSParsingBook2.png
+├── starter_code.py      
+├── main.py              
+├── test.py 
+├──	star_map3.py
+├── albums_lab.py             
+├── tunes.db             
+├── README.md            
+├── assignment.md        
+├── LICENSE
+└── .gitignore
+
+
 # Screenshots
 ![MAIN MENU](images/screenshot1.png)
 ![Choice1](images/SSChoice1.png)
@@ -66,89 +97,23 @@ for folder in os.listdir(books_dir): scans the ABC_books and loads the ABC files
 |-----------|-----------|
 | main.py | Self written |
 | starter_code.py | Modified from [reference]() |
-| test.py | From [reference]() |
+| test.py | From [reference](albums_lab.py) |
 
 # References
-* 
-* Item 2
+* ![w3schools](https://www.w3schools.com/python/pandas/default.asp)
 * [![YouTube](http://img.youtube.com/vi/lyoyTlltFVU/0.jpg)](https://www.youtube.com/watch?v=lyoyTlltFVU)
-
+* ![Stack Overflow](https://stackoverflow.com/questions/110923/how-do-i-close-a-tkinter-window)
 
 
 # What I am most proud of in the assignment
-
-Bla bla bla
+- Built a complete data pipeline from raw ABC text files to working database. 
+- Parsed hundreds of tunes into a structure format.
 
 # What I learned
+I learn how to read and combine data from multiple files, parse plain text to extract structured values, and store everything in a SQLite database using tables, inserts, and queries. i also gained experience loading and filtering data with Pandas, building an interactive menu for searching the data.
 
-Bla bla bla
 
 
-## This is how to markdown text:
 
-This is *emphasis*
 
-This is a bulleted list
 
-- Item
-- Item
-
-This is a numbered list
-
-1. Item
-1. Item
-
-This is a [hyperlink](http://bryanduggan.org)
-
-# Headings
-## Headings
-#### Headings
-##### Headings
-
-This is code:
-
-```Java
-public void render()
-{
-	ui.noFill();
-	ui.stroke(255);
-	ui.rect(x, y, width, height);
-	ui.textAlign(PApplet.CENTER, PApplet.CENTER);
-	ui.text(text, x + width * 0.5f, y + height * 0.5f);
-}
-```
-
-So is this without specifying the language:
-
-```
-public void render()
-{
-	ui.noFill();
-	ui.stroke(255);
-	ui.rect(x, y, width, height);
-	ui.textAlign(PApplet.CENTER, PApplet.CENTER);
-	ui.text(text, x + width * 0.5f, y + height * 0.5f);
-}
-```
-
-This is an image using a relative URL:
-
-![An image](images/p8.png)
-
-This is an image using an absolute URL:
-
-![A different image](https://bryanduggandotorg.files.wordpress.com/2019/02/infinite-forms-00045.png?w=595&h=&zoom=2)
-
-This is a youtube video:
-
-[![YouTube](http://img.youtube.com/vi/J2kHSSFA4NU/0.jpg)](https://www.youtube.com/watch?v=J2kHSSFA4NU)
-
-This is a table:
-
-| Heading 1 | Heading 2 |
-|-----------|-----------|
-|Some stuff | Some more stuff in this column |
-|Some stuff | Some more stuff in this column |
-|Some stuff | Some more stuff in this column |
-
-|Some stuff | Some more stuff in this column |
