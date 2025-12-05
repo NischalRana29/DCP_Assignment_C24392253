@@ -35,7 +35,6 @@ Bla bla bla
 
 Bla bla bla
 
-## Below is how to use Markdown. You can delete this:
 
 ## This is how to markdown text:
 

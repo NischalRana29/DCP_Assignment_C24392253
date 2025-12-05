@@ -12,6 +12,8 @@
 import os 
 import sqlite3
 import pandas as pd
+import tkinter as tk
+from tkinter import ttk, scrolledtext, messagebox
 
 # Path to the folder containing book directories
 books_dir = "abc_books"
@@ -254,6 +256,70 @@ def run_menu():
             print("Invalid choice. Try again.")
 
 
+def launch_gui():
+    df = load_dataframe()
+
+    root = tk.Tk()
+    root.title("ABC Tune Database")
+    root.geometry("800x600")
+
+    # Frame for filters
+    frame = tk.Frame(root)
+    frame.pack(pady=10)
+
+    # Book selection dropdown
+    tk.Label(frame, text="Select Book:").grid(row=0, column=0, padx=5)
+    books = sorted([int(b) for b in df["book_number"].unique()])
+    selected_book = tk.StringVar()
+    book_menu = ttk.Combobox(frame, textvariable=selected_book, values=books, width=10)
+    book_menu.grid(row=0, column=1, padx=5)
+
+    # Search bar
+    tk.Label(frame, text="Search Title:").grid(row=0, column=2, padx=5)
+    search_var = tk.StringVar()
+    search_entry = tk.Entry(frame, textvariable=search_var, width=20)
+    search_entry.grid(row=0, column=3, padx=5)
+
+    # Tune List
+    tune_list = tk.Listbox(root, width=80, height=15)
+    tune_list.pack(pady=10)
+
+    # ABC text display
+    abc_box = scrolledtext.ScrolledText(root, width=80, height=15)
+    abc_box.pack()
+
+    def refresh_list():
+        tune_list.delete(0, tk.END)
+        abc_box.delete("1.0", tk.END)
+
+        temp_df = df.copy()
+
+        if selected_book.get():
+            temp_df = temp_df[temp_df["book_number"] == int(selected_book.get())]
+
+        if search_var.get():
+            term = search_var.get()
+            temp_df = temp_df[temp_df["title"].str.contains(term, case=False, na=False)]
+
+        for _, row in temp_df.iterrows():
+            tune_list.insert(tk.END, f"{row['id']} - {row['title']} ({row['tune_type']})")
+
+    def show_abc(event):
+        selection = tune_list.get(tune_list.curselection())
+        tune_id = int(selection.split(" - ")[0])
+
+        abc_text = df[df["id"] == tune_id]["raw_abc"].values[0]
+        abc_box.delete("1.0", tk.END)
+        abc_box.insert(tk.END, abc_text)
+
+    # Buttons
+    tk.Button(frame, text="Apply Filters", command=refresh_list).grid(row=0, column=4, padx=10)
+
+    tune_list.bind("<<ListboxSelect>>", show_abc)
+
+    root.mainloop()
+
+
 if __name__ == "__main__":
     main()
-    run_menu()
+    launch_gui()
