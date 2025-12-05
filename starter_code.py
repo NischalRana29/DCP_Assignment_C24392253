@@ -40,30 +40,7 @@ def do_databasse_stuff():
     
     df = pd.read_sql("SELECT * FROM users", conn)
     print(df.head())
-    conn.close()
-
-def my_sql_database():
-    conn = mysql.connector.connect(host="localhost", user="root", database="tunepal")
-    
-    cursor = conn.cursor()
-    cursor.execute("select * from tuneindex")
-    
-    
-    while True:
-        row = cursor.fetchone()
-        if not row:
-            break
-        else:
-            print(row)
-    # results = cursor.fetchall()
-    
-    
-
-    # Print results
-    for row in results:
-        print(row)    
-    conn.close()
-    
+    conn.close()    
 
 books_dir = "abc_books"
 
