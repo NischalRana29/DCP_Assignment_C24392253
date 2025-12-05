@@ -139,6 +139,20 @@ def process_file(file):
         pass
 
 
+def get_tunes_by_book(df, book_number):
+    """
+    return all tunes from the specified book number.
+    """
+    return df[df["book_number"] == book_number]
+
+def get_tunes_by_type(df, tune_type):
+    return df[df["tune_type"].str.lower() == tune_type.lower()]
+
+def search_tunes(df, search_term):
+    mask = df["title"].str.contains(search_term, case = False, na = False)
+    return df[mask]
+
+
 def main():
     conn = sqlite3.connect("tunes.db")
     init_db(conn)
@@ -160,12 +174,13 @@ def main():
                     tunes = parse_abc_file(file_path, book_number)
                     all_tunes.extend(tunes)
 
+    #insert all parsed tunes
     insert_tunes(conn, all_tunes)
     conn.close()
 
     print(f"\nDone! Parsed and stored {len(all_tunes)} tunes.")
 
-    # Load into pandas
+    # load dataframe for preview
     conn = sqlite3.connect("tunes.db")
     df = pd.read_sql("SELECT * FROM tunes", conn)
     print(df.head())
