@@ -7,6 +7,8 @@ Name: Nischal Rana
 Student Number: C24392253
 
 # Screenshots
+images\screenshot1.png
+
 
 
 # Description of the project
@@ -27,15 +29,34 @@ Menu Options
 1) List all books
 	Displays all available book numbers found in the dataset.
 
+2) Get tunes by book
+	Prompts you to enter a book number (e.g., 0, 1, 2).
+	The program then displays the first 20 tunes from that book, including:
+		*Tune ID
+		*Title
+		*Tune type
+		*Meter
+		*Key signature
+
+3) Get tunes by type
+
+4) Search tunes by title
+
+5) Show a tune’s ABC text
+	Prompts you to enter a Tune ID.
+	You can see Tune IDs in results from options 2–4.
+
+0) Quits the program
 
 # How it works:
+
 
 # List of files in the project
 
 | Files | Source |
 |-----------|-----------|
 | main.py | Self written |
-| test.py | Modified from [reference]() |
+| starter_code.py | Modified from [reference]() |
 | test.py | From [reference]() |
 
 # References
