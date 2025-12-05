@@ -1,13 +1,20 @@
 # Starter code for Data Centric Programming Assignment 2025
 
 # os is a module that lets us access the file system
-
-# Bryan Duggan likes Star Trek
-# Bryan Duggan is a great flute player
+# This program:
+# 1. Recursively loads all .abc tune files from the abc_books/ folder
+# 2. Parses them into dictionaries
+# 3. Stores them in a SQLite database (tunes.db)
+# 4. Loads them into pandas for quick preview
+#
+# Author: Nischal Rana
 
 import os 
 import sqlite3
 import pandas as pd
+
+# Path to the folder containing book directories
+books_dir = "abc_books"
 
 # sqlite for connecting to sqlite databases
 # database steup 
@@ -118,40 +125,7 @@ def parse_abc_file(file_path, book_number):
         all_tunes.append(tune)
 
     return all_tunes
-    
-# An example of how to create a table, insert data
-# and run a select query
-def do_databasse_stuff():
 
-    conn = sqlite3.connect('tunes.db')
-    cursor = conn.cursor()
-
-    # Create table
-    cursor.execute('CREATE TABLE IF NOT EXISTS users (name TEXT, age INTEGER)')
-
-    # Insert data
-    cursor.execute('INSERT INTO users (name, age) VALUES (?, ?)', ('John', 30))
-
-    # Save changes
-    conn.commit()
-
-    cursor.execute('SELECT * FROM users')
-
-    # Get all results
-    results = cursor.fetchall()
-
-    # Print results
-    for row in results:
-        print(row)    
-        print(row[0])
-        print(row[1])
-    # Close
-    
-    df = pd.read_sql("SELECT * FROM users", conn)
-    print(df.head())
-    conn.close()    
-
-books_dir = "abc_books"
 
 def process_file(file):
     with open(file, 'r') as f:
@@ -164,22 +138,38 @@ def process_file(file):
         # print(line)
         pass
 
-# do_databasse_stuff()
 
-# Iterate over directories in abc_books
-for item in os.listdir(books_dir):
-    # item is the dir name, this makes it into a path
-    item_path = os.path.join(books_dir, item)
-    
-    # Check if it's a directory and has a numeric name
-    if os.path.isdir(item_path) and item.isdigit():
-        print(f"Found numbered directory: {item}")
-        
-        # Iterate over files in the numbered directory
-        for file in os.listdir(item_path):
-            # Check if file has .abc extension
-            if file.endswith('.abc'):
-                file_path = os.path.join(item_path, file)
-                print(f"  Found abc file: {file}")
-                process_file(file_path)
-                
+def main():
+    conn = sqlite3.connect("tunes.db")
+    init_db(conn)
+
+    all_tunes = []
+
+    for folder in os.listdir(books_dir):
+        folder_path = os.path.join(books_dir, folder)
+
+        if os.path.isdir(folder_path) and folder.isdigit():
+            book_number = int(folder)
+            print(f"Found book: {book_number}")
+
+            for file in os.listdir(folder_path):
+                if file.endswith(".abc"):
+                    file_path = os.path.join(folder_path, file)
+                    print(f"  Parsing: {file}")
+
+                    tunes = parse_abc_file(file_path, book_number)
+                    all_tunes.extend(tunes)
+
+    insert_tunes(conn, all_tunes)
+    conn.close()
+
+    print(f"\nDone! Parsed and stored {len(all_tunes)} tunes.")
+
+    # Load into pandas
+    conn = sqlite3.connect("tunes.db")
+    df = pd.read_sql("SELECT * FROM tunes", conn)
+    print(df.head())
+    conn.close()
+
+if __name__ == "__main__":
+    main()
