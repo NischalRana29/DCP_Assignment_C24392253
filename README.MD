@@ -7,7 +7,7 @@ Name: Nischal Rana
 Student Number: C24392253
 
 # Screenshots
-images\screenshot1.png
+![Main Menu](images\screenshot1.png)
 
 
 
