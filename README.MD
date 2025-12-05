@@ -14,6 +14,14 @@ The project is a complete data-driven program that evaluates and processes class
 
 Each song is processed, then stored in a SQLite database (tunes.db) as a structured Python dictionary. All significant metadata, such as the book number, tune index, title, tune type, meter, key signature, and the complete raw ABC text, are recorded in the database structure.
 
+The stored data is subsequently loaded and analysed using a pandas DataFrame, allowing queries like:
+*Listing every song in a particular book
+*Sorting music by genre (air, reel, jig, etc.)
+*Title-based music search (case-insensitive)
+*Seeing the complete ABC notation for any song
+
+Additionally, the project has an interactive user interface that can be accessed as an optional Tkinter GUI or as a text-based menu. Without writing any code, these interfaces make it simple for users to browse books, find music, filter results, and display ABC notation.
+
 # Instructions for use
 
 # How it works:
