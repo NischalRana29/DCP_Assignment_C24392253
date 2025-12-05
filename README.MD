@@ -23,6 +23,10 @@ The stored data is subsequently loaded and analysed using a pandas DataFrame, al
 Additionally, the project has an interactive user interface that can be accessed as an optional Tkinter GUI or as a text-based menu. Without writing any code, these interfaces make it simple for users to browse books, find music, filter results, and display ABC notation.
 
 # Instructions for use
+Menu Options
+1) List all books
+	Displays all available book numbers found in the dataset.
+
 
 # How it works:
 
