@@ -10,6 +10,9 @@ Student Number: C24392253
 
 
 # Description of the project
+The project is a complete data-driven program that evaluates and processes classic songs in the format of abc notation. A directory of music "books", each of which has several.abc files, is automatically scanned by the application. The program must accurately recognise and parse tune borders using ABC headers like X:, T:, R:, M:, and K: because each file may include one or more songs.
+
+Each song is processed, then stored in a SQLite database (tunes.db) as a structured Python dictionary. All significant metadata, such as the book number, tune index, title, tune type, meter, key signature, and the complete raw ABC text, are recorded in the database structure.
 
 # Instructions for use
 
