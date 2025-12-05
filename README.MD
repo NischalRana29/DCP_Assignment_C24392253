@@ -8,7 +8,13 @@ Student Number: C24392253
 
 # Screenshots
 ![MAIN MENU](images/screenshot1.png)
-
+![Choice1](images/SSChoice1.png)
+![Choice2](images/SSChoice2.png)
+![Choice3](images/SSChoice3.png)
+![Choice4](images/SSChoice4.png)
+![Choice5](images/SSforchoice5.png)
+![Choice0](images/SSforchoice0.png)
+![Parsing]()
 
 
 # Description of the project
