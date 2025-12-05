@@ -56,7 +56,9 @@ Menu Options
 0) Quits the program
 
 # How it works:
+This project processes traditional music tunes in ABC notation, utilizing file handling, text parsing, SQL databases, and user interaction to automatically load, parse, store, analyze, and display these tunes through a multi-stage workflow.
 
+for folder in os.listdir(books_dir): scans the ABC_books and loads the ABC files.
 
 # List of files in the project
 
@@ -67,8 +69,11 @@ Menu Options
 | test.py | From [reference]() |
 
 # References
-* Item 1
+* 
 * Item 2
+* [![YouTube](http://img.youtube.com/vi/lyoyTlltFVU/0.jpg)](https://www.youtube.com/watch?v=lyoyTlltFVU)
+
+
 
 # What I am most proud of in the assignment
 
