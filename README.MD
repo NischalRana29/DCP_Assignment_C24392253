@@ -2,11 +2,12 @@
 
 - [Assignment Brief](assignment.md)
 
-Name:
+Name: Nischal Rana
 
-Student Number: 
+Student Number: C24392253
 
 # Screenshots
+
 
 # Description of the project
 

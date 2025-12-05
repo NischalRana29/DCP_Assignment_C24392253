@@ -8,7 +8,6 @@
 import os 
 import sqlite3
 import pandas as pd
-import mysql.connector
 # sqlite for connecting to sqlite databases
 
 # An example of how to create a table, insert data
